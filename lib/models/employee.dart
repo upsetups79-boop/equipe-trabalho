@@ -2,6 +2,7 @@ class Employee {
   final int? id;
   final String name;
   final String shift;
+  final String schedule;
   final String startTime;
   final String endTime;
   final String color;
@@ -11,6 +12,7 @@ class Employee {
     this.id,
     required this.name,
     required this.shift,
+    required this.schedule,
     required this.startTime,
     required this.endTime,
     required this.color,
@@ -22,6 +24,7 @@ class Employee {
       'id': id,
       'name': name,
       'shift': shift,
+      'schedule': schedule,
       'startTime': startTime,
       'endTime': endTime,
       'color': color,
@@ -34,6 +37,7 @@ class Employee {
       id: map['id'],
       name: map['name'],
       shift: map['shift'],
+      schedule: map['schedule'] ?? '6x1',
       startTime: map['startTime'] ?? '08:00',
       endTime: map['endTime'] ?? '17:00',
       color: map['color'],
@@ -45,6 +49,7 @@ class Employee {
     int? id,
     String? name,
     String? shift,
+    String? schedule,
     String? startTime,
     String? endTime,
     String? color,
@@ -54,6 +59,7 @@ class Employee {
       id: id ?? this.id,
       name: name ?? this.name,
       shift: shift ?? this.shift,
+      schedule: schedule ?? this.schedule,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       color: color ?? this.color,

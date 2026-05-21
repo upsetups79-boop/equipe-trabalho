@@ -216,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     employee.name,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text('${employee.startTime} - ${employee.endTime}'),
+                  subtitle: Text('${employee.schedule} • ${employee.startTime} - ${employee.endTime}'),
                 ),
               );
             }).toList(),

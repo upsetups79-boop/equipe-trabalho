@@ -17,10 +17,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final _nameController = TextEditingController();
   String _selectedShift = 'Manhã';
   String _selectedColor = '2196F3';
+  String _selectedSchedule = '6x1';
   TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 17, minute: 0);
 
   final List<String> _shifts = ['Manhã', 'Noite'];
+  final List<String> _schedules = ['6x1', '5x2', '4x3', '3x3'];
   final List<String> _colors = [
     '2196F3',
     '4CAF50',
@@ -89,6 +91,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         id: widget.employee?.id,
         name: _nameController.text,
         shift: _selectedShift,
+        schedule: _selectedSchedule,
         startTime: _formatTime(_startTime),
         endTime: _formatTime(_endTime),
         color: _selectedColor,
@@ -152,6 +155,24 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 }).toList(),
                 onChanged: (value) {
                   setState(() => _selectedShift = value!);
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: _selectedSchedule,
+                decoration: const InputDecoration(
+                  labelText: 'Escala de Trabalho',
+                  prefixIcon: Icon(Icons.calendar_month),
+                  border: OutlineInputBorder(),
+                ),
+                items: _schedules.map((schedule) {
+                  return DropdownMenuItem(
+                    value: schedule,
+                    child: Text(schedule),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() => _selectedSchedule = value!);
                 },
               ),
               const SizedBox(height: 16),
