@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/database_helper.dart';
 import '../services/schedule_service.dart';
+import 'notifications_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -81,6 +82,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             _buildInfoCard(),
             const SizedBox(height: 24),
+            _buildNotificationsButton(),
+            const SizedBox(height: 16),
             _buildGenerateButton(),
             const SizedBox(height: 16),
             _buildClearButton(),
@@ -132,6 +135,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Text('Dia 3: Func3 e Func6 folgam'),
             const Text('Dia 4: Func1 e Func4 folgam novamente'),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationsButton() {
+    return ElevatedButton.icon(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+        );
+      },
+      icon: const Icon(Icons.notifications),
+      label: const Text('Configurar Notificações'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
