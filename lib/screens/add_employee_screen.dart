@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/employee.dart';
 import '../services/database_helper.dart';
+import '../services/schedule_service.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
   final Employee? employee;
@@ -16,6 +17,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final _nameController = TextEditingController();
   String _selectedShift = 'Manhã';
   String _selectedColor = '2196F3';
+  TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 17, minute: 0);
 
   final List<String> _shifts = ['Manhã', 'Noite'];
   final List<String> _colors = [
@@ -40,7 +43,18 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       _nameController.text = widget.employee!.name;
       _selectedShift = widget.employee!.shift;
       _selectedColor = widget.employee!.color;
+      _startTime = _parseTime(widget.employee!.startTime);
+      _endTime = _parseTime(widget.employee!.endTime);
     }
+  }
+
+  TimeOfDay _parseTime(String time) {
+    final parts = time.split(':');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
+
+  String _formatTime(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -49,12 +63,34 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     super.dispose();
   }
 
+  Future<void> _selectStartTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _startTime,
+    );
+    if (picked != null) {
+      setState(() => _startTime = picked);
+    }
+  }
+
+  Future<void> _selectEndTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _endTime,
+    );
+    if (picked != null) {
+      setState(() => _endTime = picked);
+    }
+  }
+
   Future<void> _saveEmployee() async {
     if (_formKey.currentState!.validate()) {
       final employee = Employee(
         id: widget.employee?.id,
         name: _nameController.text,
         shift: _selectedShift,
+        startTime: _formatTime(_startTime),
+        endTime: _formatTime(_endTime),
         color: _selectedColor,
         isActive: widget.employee?.isActive ?? true,
       );
@@ -63,6 +99,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         await DatabaseHelper.instance.updateEmployee(employee);
       } else {
         await DatabaseHelper.instance.insertEmployee(employee);
+        // Auto-generate schedule for new employee
+        await ScheduleService.instance.generateSchedule(DateTime.now(), 3);
       }
 
       if (mounted) Navigator.pop(context);
@@ -86,9 +124,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Nome',
+                  labelText: 'Nome do Funcionário',
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
+                  hintText: 'Ex: João Silva',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -114,6 +153,36 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                 onChanged: (value) {
                   setState(() => _selectedShift = value!);
                 },
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: const Text('Horário de Entrada'),
+                      subtitle: Text(_formatTime(_startTime)),
+                      trailing: const Icon(Icons.access_time),
+                      onTap: _selectStartTime,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(color: Colors.grey[400]!),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ListTile(
+                      title: const Text('Horário de Saída'),
+                      subtitle: Text(_formatTime(_endTime)),
+                      trailing: const Icon(Icons.access_time),
+                      onTap: _selectEndTime,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(color: Colors.grey[400]!),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               const Text(
@@ -157,7 +226,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                   ),
                 ),
                 child: Text(
-                  widget.employee != null ? 'Salvar' : 'Adicionar',
+                  widget.employee != null ? 'Salvar' : 'Adicionar e Gerar Escala',
                   style: const TextStyle(fontSize: 16),
                 ),
               ),

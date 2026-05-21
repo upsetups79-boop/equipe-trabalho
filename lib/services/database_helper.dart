@@ -18,7 +18,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = p.join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async {
@@ -27,6 +27,8 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         shift TEXT NOT NULL,
+        startTime TEXT NOT NULL DEFAULT '08:00',
+        endTime TEXT NOT NULL DEFAULT '17:00',
         color TEXT NOT NULL,
         isActive INTEGER NOT NULL DEFAULT 1
       )
@@ -41,6 +43,13 @@ class DatabaseHelper {
         FOREIGN KEY (employeeId) REFERENCES employees (id)
       )
     ''');
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE employees ADD COLUMN startTime TEXT NOT NULL DEFAULT "08:00"');
+      await db.execute('ALTER TABLE employees ADD COLUMN endTime TEXT NOT NULL DEFAULT "17:00"');
+    }
   }
 
   // Employee methods

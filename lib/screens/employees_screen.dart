@@ -114,7 +114,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           employee.name,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(employee.shift),
+                        subtitle: Text('${employee.shift} • ${employee.startTime} - ${employee.endTime}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

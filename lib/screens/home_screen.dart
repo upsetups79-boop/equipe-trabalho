@@ -198,21 +198,26 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(color: Colors.grey[500]),
           )
         else
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          Column(
             children: employees.map((employee) {
-              return Chip(
-                avatar: CircleAvatar(
-                  backgroundColor: Color(
-                    int.parse('FF${employee.color}', radix: 16),
+              return Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Color(
+                      int.parse('FF${employee.color}', radix: 16),
+                    ),
+                    child: Text(
+                      employee.name[0].toUpperCase(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
-                  child: Text(
-                    employee.name[0].toUpperCase(),
-                    style: const TextStyle(color: Colors.white),
+                  title: Text(
+                    employee.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  subtitle: Text('${employee.startTime} - ${employee.endTime}'),
                 ),
-                label: Text(employee.name),
               );
             }).toList(),
           ),
