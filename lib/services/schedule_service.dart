@@ -8,6 +8,8 @@ class ScheduleService {
   ScheduleService._init();
 
   // Generate 6x1 schedule for all employees
+  // 6x1 means: 6 days working, 1 day off
+  // The day off rotates among employees in the same shift
   Future<void> generateSchedule(DateTime startDate, int months) async {
     final employees = await DatabaseHelper.instance.getEmployees();
     final activeEmployees = employees.where((e) => e.isActive).toList();
@@ -39,15 +41,17 @@ class ScheduleService {
       for (var date = startDate;
           date.isBefore(endDate);
           date = date.add(const Duration(days: 1))) {
-        // Calculate which employee has day off
-        // The rotation is based on the day difference from start date
         final daysDifference = date.difference(startDate).inDays;
-        final employeeIndex = daysDifference % employeesInShift.length;
-        final employeeOnLeave = employeesInShift[employeeIndex];
 
         // Create schedule for each employee in this shift
-        for (final employee in employeesInShift) {
-          final isDayOff = employee.id == employeeOnLeave.id;
+        for (int i = 0; i < employeesInShift.length; i++) {
+          final employee = employeesInShift[i];
+
+          // 6x1 logic: employee has day off when (daysDifference - i) % 7 == 0
+          // This means each employee works 6 days then has 1 day off
+          // The day off is staggered by the employee index
+          final isDayOff = (daysDifference - i) % 7 == 0;
+
           final schedule = Schedule(
             employeeId: employee.id!,
             date: date,
