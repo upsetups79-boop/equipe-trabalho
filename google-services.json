@@ -1,0 +1,29 @@
+echo '{
+  "project_info": {
+    "project_number": "767806755547",
+    "project_id": "minha-escala-48427",
+    "storage_bucket": "minha-escala-48427.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767806755547:android:dec6d36cf2fd8b72cff2fe",
+        "android_client_info": {
+          "package_name": "com.example.minha_escala"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaeLalmSQofw6doFQHhOVTuwc9ZnUzvCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}' > google-services.json
