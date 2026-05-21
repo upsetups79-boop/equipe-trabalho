@@ -1,4 +1,4 @@
-echo '{
+ '{
   "project_info": {
     "project_number": "767806755547",
     "project_id": "minha-escala-48427",
@@ -26,4 +26,4 @@ echo '{
     }
   ],
   "configuration_version": "1"
-}' > google-services.json
+}'  google-services.json
