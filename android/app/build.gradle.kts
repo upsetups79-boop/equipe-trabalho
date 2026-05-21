@@ -5,6 +5,11 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+    implementation("com.google.firebase:firebase-messaging")
+}
+
 android {
     namespace = "com.example.minha_escala"
     compileSdk = flutter.compileSdkVersion
