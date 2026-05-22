@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/database_helper.dart';
 import '../services/schedule_service.dart';
-import 'notifications_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
